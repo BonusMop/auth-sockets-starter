@@ -2,11 +2,21 @@
   "name": "auth-sockets-starter",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server/server.ts",
   "scripts": {
+    "start": "ts-node src/server/server.ts",
+    "build": "tsc -p .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Brian Butler",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.19.0",
+    "@typescript-eslint/parser": "^4.19.0",
+    "eslint": "^7.23.0",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.3"
+  }
 }
