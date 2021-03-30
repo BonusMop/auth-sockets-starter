@@ -1,5 +1,5 @@
 import express from 'express';
 
-export interface IExpressController {
+export interface Controller {
     router: express.Router;
 }

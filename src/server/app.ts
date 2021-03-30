@@ -1,12 +1,12 @@
 import express from 'express';
 
-import { IExpressController } from 'controllers/IExpressController';
+import { Controller } from 'controllers/controller';
 
 export class App {
     private port: number;
     private app;
 
-    constructor(controllers: IExpressController[], port: number) {
+    constructor(controllers: Controller[], port: number) {
         this.port = port;
         this.app = express();
         this.initializeControllers(controllers);
@@ -18,7 +18,7 @@ export class App {
         });
     }
 
-    private initializeControllers(controllers: IExpressController[]): void {
+    private initializeControllers(controllers: Controller[]): void {
         controllers.forEach(controller => {
             this.app.use('/', controller.router);
         });

@@ -1,7 +1,7 @@
 import express from 'express';
-import { IExpressController } from './IExpressController';
+import { Controller } from './controller';
 
-export class HomeController implements IExpressController {
+export class HomeController implements Controller {
     public router = express.Router();
     public path = '/';
 
