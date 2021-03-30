@@ -1,0 +1,23 @@
+import express from 'express';
+import jwt from 'jsonwebtoken';
+import { Controller } from './controller';
+import { UserToken } from '../model/userToken';
+
+export class AuthController implements Controller {
+    public router = express.Router();
+    public path = '/auth';
+
+    constructor() {
+        this.initializeRoutes();
+    }
+
+    private initializeRoutes() {
+        this.router.post(this.path + '/login', this.login);
+    }
+
+    private login(request: express.Request, response: express.Response) {
+        const userToken = new UserToken(1,'me@somewhere.com');
+        const signedToken = jwt.sign(userToken.token, 'MY_SECRET');
+        response.json({signedToken});
+    }
+}
