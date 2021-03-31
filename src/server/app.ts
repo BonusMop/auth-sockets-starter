@@ -1,6 +1,9 @@
 import express from 'express';
+import passport from 'passport';
+import { Strategy as StrategyJwt, ExtractJwt, StrategyOptions } from 'passport-jwt';
 
 import { Controller } from 'controllers/controller';
+import { UserToken } from 'model/userToken';
 
 export class App {
     private port: number;
@@ -9,6 +12,7 @@ export class App {
     constructor(controllers: Controller[], port: number) {
         this.port = port;
         this.app = express();
+        this.initializeAuthentication();
         this.initializeControllers(controllers);
     }
 
@@ -20,8 +24,23 @@ export class App {
 
     private initializeControllers(controllers: Controller[]): void {
         controllers.forEach(controller => {
-            this.app.use('/', controller.router);
+            if (controller.requireAuthHeader) {
+                this.app.use('/', passport.authenticate('jwt', {session: false}), controller.router);
+            } else {
+                this.app.use('/', controller.router);
+            }
         });
+    }
+
+    private initializeAuthentication() {
+        const jwtOptions: StrategyOptions = {
+            secretOrKey: 'MY_SECRET',
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        };
+
+        passport.use(new StrategyJwt(jwtOptions, (payload: UserToken, done) => {
+            return done(null, payload);
+        }))
     }
 
 }

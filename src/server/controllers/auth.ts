@@ -6,6 +6,7 @@ import { UserToken } from '../model/userToken';
 export class AuthController implements Controller {
     public router = express.Router();
     public path = '/auth';
+    public requireAuthHeader = false;
 
     constructor() {
         this.initializeRoutes();

@@ -4,6 +4,7 @@ import { Controller } from './controller';
 export class HomeController implements Controller {
     public router = express.Router();
     public path = '/';
+    public requireAuthHeader = false;
 
     constructor() {
         this.initializeRoutes();
