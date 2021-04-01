@@ -2,6 +2,7 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import { Controller } from './controller';
 import { UserToken } from '../model/userToken';
+import { Environment } from '../environment';
 
 export class AuthController implements Controller {
     public router = express.Router();
@@ -18,7 +19,7 @@ export class AuthController implements Controller {
 
     private login(request: express.Request, response: express.Response) {
         const userToken = new UserToken(1,'me@somewhere.com');
-        const signedToken = jwt.sign(userToken.token, 'MY_SECRET');
+        const signedToken = jwt.sign(userToken.token, Environment.ACCESS_TOKEN_SECRET);
         response.json({signedToken});
     }
 }

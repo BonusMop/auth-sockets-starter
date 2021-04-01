@@ -4,6 +4,7 @@ import { Strategy as StrategyJwt, ExtractJwt, StrategyOptions } from 'passport-j
 
 import { Controller } from 'controllers/controller';
 import { UserToken } from 'model/userToken';
+import { Environment } from './environment';
 
 export class App {
     private port: number;
@@ -34,7 +35,7 @@ export class App {
 
     private initializeAuthentication() {
         const jwtOptions: StrategyOptions = {
-            secretOrKey: 'MY_SECRET',
+            secretOrKey: Environment.ACCESS_TOKEN_SECRET,
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         };
 
