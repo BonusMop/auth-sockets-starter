@@ -1,5 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
+import passport from 'passport';
+
 import { Controller } from './controller';
 import { UserToken } from '../model/userToken';
 import { Environment } from '../environment';
@@ -15,11 +17,19 @@ export class AuthController implements Controller {
 
     private initializeRoutes() {
         this.router.post(this.path + '/login', this.login);
+        this.router.post(this.path + '/refresh', passport.authenticate('jwt-refresh', {session: false}), this.refresh);
     }
 
     private login(request: express.Request, response: express.Response) {
         const userToken = new UserToken(1,'me@somewhere.com');
-        const signedToken = jwt.sign(userToken.token, Environment.ACCESS_TOKEN_SECRET);
-        response.json({signedToken});
+        const accessToken = jwt.sign(userToken.token, Environment.ACCESS_TOKEN_SECRET, { expiresIn: '30m'});
+        const refreshToken = jwt.sign({user: userToken.email}, Environment.REFRESH_TOKEN_SECRET, { expiresIn: '1y'});
+        response.json({accessToken, refreshToken});
+    }
+
+    private refresh(request: express.Request, response: express.Response) {
+        const userToken = new UserToken(1,'me@somewhere.com');
+        const accessToken = jwt.sign(userToken.token, Environment.ACCESS_TOKEN_SECRET, { expiresIn: '30m'});
+        response.json({accessToken});
     }
 }

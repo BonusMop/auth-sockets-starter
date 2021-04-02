@@ -26,7 +26,7 @@ export class App {
     private initializeControllers(controllers: Controller[]): void {
         controllers.forEach(controller => {
             if (controller.requireAuthHeader) {
-                this.app.use('/', passport.authenticate('jwt', {session: false}), controller.router);
+                this.app.use('/', passport.authenticate('jwt-access', {session: false}), controller.router);
             } else {
                 this.app.use('/', controller.router);
             }
@@ -34,12 +34,17 @@ export class App {
     }
 
     private initializeAuthentication() {
+        this.initializeJwt('jwt-access', Environment.ACCESS_TOKEN_SECRET);
+        this.initializeJwt('jwt-refresh', Environment.REFRESH_TOKEN_SECRET);
+    }
+
+    private initializeJwt(strategyName: string, secret: string) {
         const jwtOptions: StrategyOptions = {
-            secretOrKey: Environment.ACCESS_TOKEN_SECRET,
+            secretOrKey: secret,
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         };
 
-        passport.use(new StrategyJwt(jwtOptions, (payload: UserToken, done) => {
+        passport.use(strategyName, new StrategyJwt(jwtOptions, (payload: UserToken, done) => {
             return done(null, payload);
         }))
     }
