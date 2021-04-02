@@ -3,7 +3,6 @@ import passport from 'passport';
 import { Strategy as StrategyJwt, ExtractJwt, StrategyOptions } from 'passport-jwt';
 
 import { Controller } from 'controllers/controller';
-import { UserToken } from 'model/userToken';
 import { Environment } from './environment';
 
 export class App {

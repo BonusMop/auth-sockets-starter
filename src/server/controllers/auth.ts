@@ -12,12 +12,13 @@ export class AuthController implements Controller {
     public requireAuthHeader = false;
 
     // TODO: Track this in a data store. This stub will provide some data in order to get started.
-    private inMemoryRefreshTokens = [];
+    private inMemoryRefreshTokens:{[index:string]:{user:number}} = {};
     private users = [
         {
             id: 1,
             name: 'A User',
             email: 'me@somewhere.com',
+            admin: true,
         }      
     ];
 
@@ -28,12 +29,16 @@ export class AuthController implements Controller {
     private initializeRoutes() {
         this.router.post(this.path + '/login', this.login.bind(this));
         this.router.post(this.path + '/refresh', passport.authenticate('jwt-refresh', {session: false}), this.refresh.bind(this));
+
+        // Admin Routes
+        this.router.get(this.path + '/tokens/:userId', passport.authenticate('jwt-access', {session: false}), this.listTokens.bind(this));
     }
 
     private login(request: express.Request, response: express.Response) {
         const userToken = this.userRecordToToken(this.users[0]); // TODO: Log in the first, fake user for development.
         const accessToken = jwt.sign(userToken.token, Environment.ACCESS_TOKEN_SECRET, { expiresIn: '30m'});
         const refreshToken = jwt.sign({user: userToken.id}, Environment.REFRESH_TOKEN_SECRET, { expiresIn: '1y'});
+        this.inMemoryRefreshTokens[refreshToken] = {user: userToken.id};
         response.json({accessToken, refreshToken});
     }
 
@@ -49,7 +54,19 @@ export class AuthController implements Controller {
         response.json({accessToken});
     }
 
-    private userRecordToToken(user: {id: number, name: string, email: string}) {
-        return new UserToken(user.id, user.email);
+    private listTokens(request: express.Request, response: express.Response) {
+        // Verify admin
+        const user = request.user as UserToken;
+        if (!user || !user.admin) {
+            response.sendStatus(401);
+            return;
+        }
+
+        const tokensForUser = Object.entries(this.inMemoryRefreshTokens).filter(([,v]) => v.user == parseInt(request.params.userId));
+        response.json(tokensForUser.map(([k,v]) => ({[k]:v.user})));
+    }
+
+    private userRecordToToken(user: {id: number, name: string, email: string, admin: boolean}) {
+        return new UserToken(user.id, user.email, user.admin);
     }
 }
