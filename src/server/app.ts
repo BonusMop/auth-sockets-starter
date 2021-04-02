@@ -44,7 +44,7 @@ export class App {
             jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         };
 
-        passport.use(strategyName, new StrategyJwt(jwtOptions, (payload: UserToken, done) => {
+        passport.use(strategyName, new StrategyJwt(jwtOptions, (payload, done) => {
             return done(null, payload);
         }))
     }
