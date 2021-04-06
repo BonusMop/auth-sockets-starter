@@ -1,23 +1,25 @@
 import express from 'express';
 import passport from 'passport';
 import { Strategy as StrategyJwt, ExtractJwt, StrategyOptions } from 'passport-jwt';
+import http from 'http';
 
 import { Controller } from 'controllers/controller';
 import { Environment } from './environment';
 
 export class App {
-    private port: number;
     private app;
+    public server;
 
-    constructor(controllers: Controller[], port: number) {
+    constructor(controllers: Controller[], private port: number) {
         this.port = port;
         this.app = express();
         this.initializeAuthentication();
+        this.server = http.createServer(this.app);
         this.initializeControllers(controllers);
     }
 
     public listen(): void {
-        this.app.listen(this.port, () => {
+        this.server.listen(this.port, () => {
             return console.log(`server is listening on port ${this.port}`);
         });
     }
@@ -31,7 +33,7 @@ export class App {
             }
         });
     }
-
+    
     private initializeAuthentication() {
         this.initializeJwt('jwt-access', Environment.ACCESS_TOKEN_SECRET);
         this.initializeJwt('jwt-refresh', Environment.REFRESH_TOKEN_SECRET);
