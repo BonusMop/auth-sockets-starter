@@ -3,6 +3,7 @@ import { SocketApp } from './socketApp';
 import { AuthController } from './controllers/auth';
 import { HomeController } from './controllers/home';
 import { TestController } from './controllers/test';
+import { TestHander } from './handlers/test';
 
 const app = new App(
     [
@@ -13,4 +14,9 @@ const app = new App(
     3000);
 app.listen();
 
-new SocketApp(app.server);
+const socketApp = new SocketApp(
+    [
+        new TestHander(),
+    ],
+    app.server);
+socketApp.listen();

@@ -19,9 +19,7 @@ export class App {
     }
 
     public listen(): void {
-        this.server.listen(this.port, () => {
-            return console.log(`server is listening on port ${this.port}`);
-        });
+        this.server.listen(this.port, () => console.log(`server is listening on port ${this.port}`));
     }
 
     private initializeControllers(controllers: Controller[]): void {
