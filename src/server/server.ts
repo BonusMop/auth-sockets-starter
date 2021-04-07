@@ -2,8 +2,8 @@ import { App } from './app';
 import { SocketApp } from './socketApp';
 import { AuthController } from './controllers/auth';
 import { HomeController } from './controllers/home';
-import { TestController } from './controllers/test';
-import { TestHander } from './handlers/test';
+import { TestController } from './controllers/testController';
+import { TestHander } from './handlers/testHandler';
 
 const app = new App(
     [
