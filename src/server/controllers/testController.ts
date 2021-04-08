@@ -7,11 +7,7 @@ export class TestController implements Controller {
     public path = '/test';
     public requireAuthHeader = true;
 
-    constructor() {
-        this.initializeRoutes();
-    }
-
-    private initializeRoutes() {
+    public initializeRoutes(): void {
         this.router.get(this.path, this.getTest);
     }
 

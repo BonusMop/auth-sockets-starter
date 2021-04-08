@@ -6,11 +6,7 @@ export class HomeController implements Controller {
     public path = '/';
     public requireAuthHeader = false;
 
-    constructor() {
-        this.initializeRoutes();
-    }
-
-    private initializeRoutes() {
+    public initializeRoutes(): void {
         this.router.get(this.path, this.getIndex);
     }
 

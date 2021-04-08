@@ -18,15 +18,11 @@ export class AuthController implements Controller {
             id: 1,
             name: 'A User',
             email: 'me@somewhere.com',
-            admin: true,
-        }      
+            admin: false,
+        },    
     ];
 
-    constructor() {
-        this.initializeRoutes();
-    }
-
-    private initializeRoutes() {
+    public initializeRoutes(): void {
         this.router.post(this.path + '/login', this.login.bind(this));
         this.router.post(this.path + '/refresh', passport.authenticate('jwt-refresh', {session: false}), this.refresh.bind(this));
 

@@ -7,14 +7,14 @@ import { Controller } from 'controllers/controller';
 import { Environment } from './environment';
 
 export class App {
-    private app;
+    public express;
     public server;
 
     constructor(controllers: Controller[], private port: number) {
         this.port = port;
-        this.app = express();
+        this.express = express();
         this.initializeAuthentication();
-        this.server = http.createServer(this.app);
+        this.server = http.createServer(this.express);
         this.initializeControllers(controllers);
     }
 
@@ -25,10 +25,11 @@ export class App {
     private initializeControllers(controllers: Controller[]): void {
         controllers.forEach(controller => {
             if (controller.requireAuthHeader) {
-                this.app.use('/', passport.authenticate('jwt-access', {session: false}), controller.router);
+                this.express.use('/', passport.authenticate('jwt-access', {session: false}), controller.router);
             } else {
-                this.app.use('/', controller.router);
+                this.express.use('/', controller.router);
             }
+            controller.initializeRoutes();
         });
     }
     
