@@ -12,6 +12,8 @@ interface IncomingAuthenticatedMessage extends http.IncomingMessage {
 }
 
 export class SocketApp {
+    private _io:ioserver.Server<DefaultEventsMap, DefaultEventsMap> | undefined;
+
     constructor(private handlers: SocketHandler[], private server: http.Server) {
     }
 
@@ -27,7 +29,13 @@ export class SocketApp {
             }
             this.handlers.forEach(h => h.register(io, socket, user));
             console.log(`user ${user?.email} connected to socket ${socket.id}`);
-        })
+        });
+
+        this._io = io;
+    }
+
+    public close(): void {
+        this._io?.close();
     }
 
     private initializeAuthentication(io: ioserver.Server<DefaultEventsMap, DefaultEventsMap>) {
