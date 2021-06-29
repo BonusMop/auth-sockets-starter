@@ -2,9 +2,9 @@
   "name": "auth-sockets-starter",
   "version": "1.0.0",
   "description": "Starter project for socket.io projects that require authorized connections.",
-  "main": "src/server/server.ts",
+  "main": "src/server.ts",
   "scripts": {
-    "start": "ts-node src/server/server.ts",
+    "start": "ts-node src/server.ts",
     "build": "tsc -p .",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "test": "jest"
