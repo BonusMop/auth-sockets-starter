@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import io from "socket.io-client";
+import { io, Socket } from "socket.io-client";
 
 import { SocketApp } from "../socketApp";
 import { App } from "../app";
@@ -7,7 +7,7 @@ import { TestHander } from "./testHandler";
 import { UserToken } from "../model/userToken";
 import { Environment } from "../environment";
 
-let clientSocket: SocketIOClient.Socket;
+let clientSocket: Socket;
 let socketApp: SocketApp;
 
 beforeAll((done) => {
